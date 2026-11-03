@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legacy BSP Application (mock)</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f3f5f8;
+            margin: 0;
+            padding: 24px;
+            color: #32363a;
+        }
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            border: 1px solid #d9d9d9;
+            overflow: hidden;
+        }
+        .header {
+            background-color: #0854a0;
+            color: #ffffff;
+            padding: 20px 28px;
+            border-bottom: 3px solid #e9730c;
+        }
+        .header h1 {
+            margin: 0 0 6px 0;
+            font-size: 22px;
+            font-weight: 600;
+        }
+        .header p {
+            margin: 0;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 28px;
+        }
+        .badge {
+            display: inline-block;
+            background: #e8f4fd;
+            color: #0854a0;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 4px;
+            border: 1px solid #bce1fb;
+            font-size: 15px;
+        }
+        .info-card {
+            background-color: #fafbfc;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            padding: 16px 20px;
+            margin-top: 20px;
+        }
+        .info-card dt {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #6a6d70;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .info-card dt:first-child {
+            margin-top: 0;
+        }
+        .info-card dd {
+            font-size: 14px;
+            color: #24292e;
+            margin-left: 0;
+            margin-top: 2px;
+            font-family: monospace;
+        }
+        .no-param {
+            color: #b00;
+            font-style: italic;
+            padding: 12px 16px;
+            background: #fff0f0;
+            border-radius: 4px;
+            border: 1px solid #ffd0d0;
+        }
+        .btn-back {
+            display: inline-block;
+            margin-top: 24px;
+            padding: 10px 18px;
+            background: #0854a0;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-back:hover {
+            background: #063c73;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Legacy BSP Application (mock)</h1>
+            <p>Simulating on-premise ABAP Business Server Pages cross-app navigation target</p>
+        </div>
+        <div class="content">
+            <div id="paramResult"></div>
+
+            <div class="info-card">
+                <dt>SAP Architecture Note</dt>
+                <dd>In production, this URL points to <code>/sap/bc/bsp/sap/&lt;app&gt;</code> on the ABAP backend.</dd>
+                <dt>Requirements for on-premise execution</dt>
+                <dd>1. ICF Service active (SICF transaction)<br>
+                    2. SAP Cloud Connector (RFC/HTTP tunnel) or Web Dispatcher<br>
+                    3. FLP System Alias mapped to backend RFC destination<br>
+                    4. Fiori Catalog & Target Mapping assigned to user's PFCG role</dd>
+            </div>
+
+            <button class="btn-back" onclick="goBack()">← Back to Fiori Launchpad</button>
+        </div>
+    </div>
+
+    <script>
+        function getParameter() {
+            var urlParams = new URLSearchParams(window.location.search);
+            var id = urlParams.get('customerId') || urlParams.get('ID') || urlParams.get('customer_ID') || urlParams.get('customer');
+
+            if (!id && window.location.hash.indexOf('?') !== -1) {
+                var hashQuery = window.location.hash.split('?')[1];
+                var hashParams = new URLSearchParams(hashQuery);
+                id = hashParams.get('customerId') || hashParams.get('ID') || hashParams.get('customer_ID') || hashParams.get('customer');
+            }
+            return id;
+        }
+
+        var customerId = getParameter();
+        var resultDiv = document.getElementById('paramResult');
+
+        if (customerId) {
+            resultDiv.innerHTML = '<p>Received Customer ID parameter: <span class="badge" id="customerIdDisplay">' + customerId + '</span></p>';
+        } else {
+            resultDiv.innerHTML = '<p class="no-param">no parameter received</p>';
+        }
+
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = '../flp.html';
+            }
+        }
+    </script>
+</body>
+</html>

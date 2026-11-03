@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>SAP Fiori Launchpad - Cross Navigation Demo</title>
+
+    <script type="text/javascript">
+        window["sap-ushell-config"] = {
+            defaultRenderer: "fiori2",
+            renderers: {
+                fiori2: {
+                    componentData: {
+                        config: {
+                            search: "hidden",
+                            enableSearch: false,
+                            rootIntent: "Shell-home"
+                        }
+                    }
+                }
+            },
+            services: {
+                LaunchPage: {
+                    adapter: {
+                        config: {
+                            groups: [
+                                {
+                                    id: "demo_group",
+                                    title: "Demo",
+                                    isPreset: true,
+                                    isVisible: true,
+                                    isGroupLocked: false,
+                                    tiles: [
+                                        {
+                                            id: "orders_tile",
+                                            title: "Sales Orders",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                chipId: "sap_ushell_generated_chip_id",
+                                                title: "Sales Orders",
+                                                subtitle: "App A (Source)",
+                                                info: "Manage Orders",
+                                                targetURL: "#Order-manage"
+                                            }
+                                        },
+                                        {
+                                            id: "customers_tile",
+                                            title: "Customers",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                chipId: "sap_ushell_generated_chip_id",
+                                                title: "Customers",
+                                                subtitle: "App B (Target)",
+                                                info: "Display Customers",
+                                                targetURL: "#Customer-display"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                NavTargetResolution: {
+                    config: {
+                        enableClientSideTargetResolution: true
+                    }
+                }
+            },
+            applications: {
+                // Target Mapping 1: Order-manage -> App A
+                // Semantic Object: "Order", Action: "manage"
+                // Points to SAPUI5 Component crossn.orders at ./orders/webapp (List Report on Orders)
+                "Order-manage": {
+                    title: "Sales Orders",
+                    description: "App A (Source)",
+                    additionalInformation: "SAPUI5.Component=crossn.orders",
+                    applicationType: "URL",
+                    url: "./orders/webapp"
+                },
+
+                // Target Mapping 2: Customer-display -> App B
+                // Semantic Object: "Customer", Action: "display"
+                // Points to SAPUI5 Component crossn.customers at ./customers/webapp (List Report + Object Page)
+                // Target of the intent-based cross-app navigation link from App A
+                "Customer-display": {
+                    title: "Customers",
+                    description: "App B (Target)",
+                    additionalInformation: "SAPUI5.Component=crossn.customers",
+                    applicationType: "URL",
+                    url: "./customers/webapp"
+                },
+
+                // Target Mapping 3: LegacyOrder-display -> Mock BSP Application
+                // Semantic Object: "LegacyOrder", Action: "display"
+                // in a real system this URL is /sap/bc/bsp/sap/<app> on the ABAP backend, and it needs the ICF service active, a system alias and the catalog assigned to the user's role.
+                "LegacyOrder-display": {
+                    title: "Legacy Orders",
+                    description: "Legacy BSP Order System",
+                    applicationType: "URL",
+                    url: "legacy-bsp/index.html"
+                }
+            }
+        };
+    </script>
+
+    <script src="https://ui5.sap.com/test-resources/sap/ushell/bootstrap/sandbox.js" id="sap-ushell-bootstrap"></script>
+
+    <script
+        id="sap-ui-bootstrap"
+        src="https://ui5.sap.com/resources/sap-ui-core.js"
+        data-sap-ui-theme="sap_horizon"
+        data-sap-ui-compatVersion="edge"
+        data-sap-ui-async="true"
+        data-sap-ui-preload="async"
+        data-sap-ui-resourceroots='{
+            "crossn.orders": "./orders/webapp",
+            "crossn.customers": "./customers/webapp"
+        }'
+        data-sap-ui-frameOptions="allow">
+    </script>
+
+    <script type="text/javascript">
+        sap.ui.getCore().attachInit(function () {
+            // Ensure the Demo group with the two tiles (Sales Orders, Customers) is configured
+            var oLpConfig = sap.ui.require("sap/base/util/ObjectPath").get("services.LaunchPage.adapter.config", window["sap-ushell-config"]);
+            if (oLpConfig && oLpConfig.groups && oLpConfig.groups.length > 0) {
+                var demoGroup = oLpConfig.groups[0];
+                demoGroup.title = "Demo";
+                demoGroup.tiles = demoGroup.tiles.filter(function (t) {
+                    return t.properties && t.properties.targetURL !== "#LegacyOrder-display";
+                });
+                oLpConfig.groups = [demoGroup];
+            }
+
+            var oRenderer = sap.ushell.Container.createRenderer("fiori2", true);
+            if (oRenderer && typeof oRenderer.then === "function") {
+                oRenderer.then(function (renderer) {
+                    renderer.placeAt("content");
+                });
+            } else if (oRenderer && typeof oRenderer.placeAt === "function") {
+                oRenderer.placeAt("content");
+            }
+        });
+    </script>
+</head>
+<body class="sapUiBody" id="content">
+</body>
+</html>
