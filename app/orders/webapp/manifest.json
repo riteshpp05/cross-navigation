@@ -21,7 +21,14 @@
         "Customer-display": {
           "semanticObject": "Customer",
           "action": "display",
-          "parameters": {}
+          "parameters": {
+            "ID": {
+              "value": {
+                "value": "customer_ID",
+                "format": "binding"
+              }
+            }
+          }
         }
       }
     }
@@ -83,7 +90,26 @@
             "settings": {
               "contextPath": "/Orders",
               "entitySet": "Orders",
-              "initialLoad": "Auto"
+              "initialLoad": "Auto",
+              "navigation": {
+                "Orders": {
+                  "detail": {
+                    "outbound": "Customer-display"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "actions": {
+                    "displayCustomer": {
+                      "press": "crossn.orders.ext.controller.CustomActions.displayCustomer",
+                      "visible": true,
+                      "text": "Display Customer",
+                      "requiresSelection": true
+                    }
+                  }
+                }
+              }
             }
           }
         }
