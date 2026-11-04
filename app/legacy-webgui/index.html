@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAP GUI for HTML - VA03 Display Sales Order</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+            background-color: #f5f6f7;
+            margin: 0;
+            padding: 0;
+            color: #333333;
+        }
+        /* Classic SAP GUI Menu Bar */
+        .gui-menubar {
+            background-color: #3f5161;
+            color: #ffffff;
+            font-size: 12px;
+            padding: 6px 16px;
+            display: flex;
+            gap: 20px;
+        }
+        .gui-menubar span {
+            cursor: pointer;
+            opacity: 0.9;
+        }
+        .gui-menubar span:hover {
+            opacity: 1;
+            text-decoration: underline;
+        }
+        /* Classic SAP GUI System Toolbar */
+        .gui-toolbar {
+            background: linear-gradient(to bottom, #eaeef2 0%, #d5dde5 100%);
+            border-bottom: 1px solid #b8c4d1;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .gui-okcode {
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid #7f9db9;
+            border-radius: 2px;
+            padding: 2px 6px;
+        }
+        .gui-okcode input {
+            border: none;
+            outline: none;
+            font-family: monospace;
+            font-weight: bold;
+            font-size: 13px;
+            color: #000;
+            width: 90px;
+        }
+        .gui-btn-check {
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 2px;
+            padding: 2px 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .gui-titlebar {
+            background-color: #004d80;
+            color: #ffffff;
+            padding: 10px 16px;
+            font-size: 15px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .gui-badge {
+            background-color: #f0ab00;
+            color: #000000;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        /* Main Container */
+        .gui-content {
+            max-width: 900px;
+            margin: 24px auto;
+            background: #ffffff;
+            border: 1px solid #c0c0c0;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .gui-form-header {
+            background: #f0f4f8;
+            padding: 14px 20px;
+            border-bottom: 1px solid #d0d7de;
+            font-size: 14px;
+            font-weight: bold;
+            color: #003366;
+        }
+        .gui-form-body {
+            padding: 24px;
+        }
+        .gui-field-row {
+            display: flex;
+            margin-bottom: 14px;
+            align-items: center;
+        }
+        .gui-label {
+            width: 180px;
+            font-size: 13px;
+            font-weight: bold;
+            color: #444;
+        }
+        .gui-input {
+            padding: 6px 10px;
+            border: 1px solid #7f9db9;
+            background: #fff;
+            border-radius: 2px;
+            font-family: monospace;
+            font-size: 14px;
+            width: 260px;
+        }
+        .gui-input-readonly {
+            background: #eef2f5;
+            color: #222;
+            font-weight: bold;
+        }
+        .gui-architecture-box {
+            margin-top: 24px;
+            background: #fbfbfb;
+            border: 1px solid #e1e4e8;
+            border-left: 4px solid #004d80;
+            padding: 16px 20px;
+            border-radius: 0 4px 4px 0;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .gui-architecture-box h4 {
+            margin: 0 0 8px 0;
+            color: #004d80;
+            font-size: 14px;
+        }
+        .gui-status-bar {
+            background: #e8ecf0;
+            border-top: 1px solid #c5d0dc;
+            padding: 6px 16px;
+            font-size: 12px;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Classic SAP Menu Bar -->
+    <div class="gui-menubar">
+        <span>Menu</span>
+        <span>Edit</span>
+        <span>Goto</span>
+        <span>Extras</span>
+        <span>Environment</span>
+        <span>System</span>
+        <span>Help</span>
+    </div>
+
+    <!-- Classic SAP GUI Toolbar -->
+    <div class="gui-toolbar">
+        <div class="gui-okcode">
+            <input type="text" value="/nVA03" readonly title="Transaction Code" />
+            <button class="gui-btn-check">&#10003;</button>
+        </div>
+        <span style="font-size: 13px; font-weight: bold; color: #555;">SAP GUI for HTML (WebGUI)</span>
+    </div>
+
+    <!-- Title Bar -->
+    <div class="gui-titlebar">
+        <span>Display Sales Order: Initial Screen (Transaction VA03)</span>
+        <span class="gui-badge">Pattern 3: On-Premise to On-Premise</span>
+    </div>
+
+    <!-- Content Screen -->
+    <div class="gui-content">
+        <div class="gui-form-header">
+            Sales Document Information
+        </div>
+        <div class="gui-form-body">
+            <div class="gui-field-row">
+                <div class="gui-label">Standard Order:</div>
+                <input type="text" id="orderIdField" class="gui-input gui-input-readonly" value="Loading..." />
+            </div>
+            <div class="gui-field-row">
+                <div class="gui-label">Sales Organization:</div>
+                <input type="text" class="gui-input gui-input-readonly" value="1000 (US Sales)" />
+            </div>
+            <div class="gui-field-row">
+                <div class="gui-label">Distribution Channel:</div>
+                <input type="text" class="gui-input gui-input-readonly" value="10 (Direct)" />
+            </div>
+            <div class="gui-field-row">
+                <div class="gui-label">Division:</div>
+                <input type="text" class="gui-input gui-input-readonly" value="00 (Cross-Division)" />
+            </div>
+
+            <!-- Architectural Explanation for Projector -->
+            <div class="gui-architecture-box">
+                <h4>🏛️ Architecture Behind On-Premise to On-Premise Navigation</h4>
+                <p>
+                    <strong>Why this exists:</strong> In large enterprise S/4HANA systems, users frequently navigate from modern Fiori Elements apps into deep, classic ABAP transactions (like <code>VA03</code>, <code>ME23N</code>, or <code>FB03</code>) that have not yet been rewritten in UI5.
+                </p>
+                <ul>
+                    <li><strong>Launchpad Host:</strong> On-Premise SAP Fiori Frontend Server (FES) or S/4HANA Embedded FLP (<code>/sap/bc/ui2/flp</code>).</li>
+                    <li><strong>Target Mapping Type:</strong> <code>Transaction</code> (Code: <code>VA03</code>) mapped in transaction <code>/UI2/FLPD_CUST</code>.</li>
+                    <li><strong>Web Dispatcher Routing:</strong> No SAP Cloud Connector needed! The browser navigates directly via the same corporate Web Dispatcher domain to <code>/sap/bc/gui/sap/its/webgui</code>.</li>
+                    <li><strong>System Alias:</strong> <code>LOCAL</code> (Same client/system) or RFC destination (Hub deployment).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="gui-status-bar">
+        <span id="statusBarMsg">&#9989; Order loaded successfully from Launchpad context</span>
+        <span>System: S4P (100) | Server: s4app01 | ITS: Active</span>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const orderId = params.get('orderId') || params.get('ID') || '4500001';
+        document.getElementById('orderIdField').value = orderId;
+        document.getElementById('statusBarMsg').innerHTML = `&#9989; Order ${orderId} displayed from Intent-Based Navigation (#Order-displayGUI)`;
+    </script>
+</body>
+</html>

@@ -57,6 +57,19 @@
                                                 info: "Display Customers",
                                                 targetURL: "#Customer-display"
                                             }
+                                        },
+                                        {
+                                            id: "webgui_tile",
+                                            title: "VA03 - Sales Order",
+                                            size: "1x1",
+                                            tileType: "sap.ushell.ui.tile.StaticTile",
+                                            properties: {
+                                                chipId: "sap_ushell_generated_chip_id",
+                                                title: "VA03 - Sales Order",
+                                                subtitle: "SAP GUI for HTML",
+                                                info: "On-Prem to On-Prem",
+                                                targetURL: "#Order-displayGUI?orderId=4500001"
+                                            }
                                         }
                                     ]
                                 }
@@ -96,12 +109,26 @@
 
                 // Target Mapping 3: LegacyOrder-display -> Mock BSP Application
                 // Semantic Object: "LegacyOrder", Action: "display"
+                // Pattern 2: Cloud to On-Premise (BTP App to On-Premise ABAP BSP via SAP Cloud Connector)
                 // in a real system this URL is /sap/bc/bsp/sap/<app> on the ABAP backend, and it needs the ICF service active, a system alias and the catalog assigned to the user's role.
                 "LegacyOrder-display": {
                     title: "Legacy Orders",
-                    description: "Legacy BSP Order System",
+                    description: "Legacy BSP Order System (Cloud to On-Prem)",
                     applicationType: "URL",
                     url: "legacy-bsp/index.html"
+                },
+
+                // Target Mapping 4: Order-displayGUI -> SAP GUI for HTML (WebGUI Transaction VA03)
+                // Semantic Object: "Order", Action: "displayGUI"
+                // Pattern 3: On-Premise to On-Premise (S/4HANA FES to SAP GUI Transaction VA03)
+                // In an on-premise system, configured in /UI2/FLPD_CUST with:
+                // Application Type: "Transaction", Transaction: "VA03", System Alias: "LOCAL"
+                "Order-displayGUI": {
+                    title: "Display Sales Order (VA03)",
+                    description: "SAP GUI for HTML Transaction (On-Prem to On-Prem)",
+                    applicationType: "URL",
+                    url: "legacy-webgui/index.html",
+                    navigationMode: "newWindow"
                 }
             }
         };

@@ -38,6 +38,37 @@ sap.ui.define([
             }).catch(function (err) {
                 console.error("Navigation failed:", err);
             });
+        },
+
+        /**
+         * Triggered when user selects an order and clicks "Open in SAP GUI (VA03)"
+         * Pattern 3: On-Premise to On-Premise navigation to classic ABAP WebGUI
+         */
+        displayGUI: function (oBindingContext, aSelectedContexts) {
+            const context = (aSelectedContexts && aSelectedContexts.length > 0)
+                ? aSelectedContexts[0]
+                : oBindingContext;
+
+            if (!context) {
+                MessageToast.show("Please select an order first.");
+                return;
+            }
+
+            const orderId = context.getProperty("ID");
+
+            sap.ushell.Container.getServiceAsync("Navigation").then(function (oNavService) {
+                oNavService.navigate({
+                    target: {
+                        semanticObject: "Order",
+                        action: "displayGUI"
+                    },
+                    params: {
+                        orderId: String(orderId)
+                    }
+                });
+            }).catch(function (err) {
+                console.error("Navigation failed:", err);
+            });
         }
     };
 });

@@ -22,6 +22,11 @@
           "semanticObject": "Customer",
           "action": "display",
           "parameters": {}
+        },
+        "Order-displayGUI": {
+          "semanticObject": "Order",
+          "action": "displayGUI",
+          "parameters": {}
         }
       }
     }
@@ -91,6 +96,12 @@
                       "press": "crossn.orders.ext.controller.CustomActions.displayCustomer",
                       "visible": true,
                       "text": "Display Customer",
+                      "requiresSelection": true
+                    },
+                    "displayGUI": {
+                      "press": "crossn.orders.ext.controller.CustomActions.displayGUI",
+                      "visible": true,
+                      "text": "Open in SAP GUI (VA03)",
                       "requiresSelection": true
                     }
                   }
