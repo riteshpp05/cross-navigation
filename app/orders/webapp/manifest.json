@@ -21,14 +21,7 @@
         "Customer-display": {
           "semanticObject": "Customer",
           "action": "display",
-          "parameters": {
-            "ID": {
-              "value": {
-                "value": "customer_ID",
-                "format": "binding"
-              }
-            }
-          }
+          "parameters": {}
         }
       }
     }
@@ -91,13 +84,6 @@
               "contextPath": "/Orders",
               "entitySet": "Orders",
               "initialLoad": "Auto",
-              "navigation": {
-                "Orders": {
-                  "detail": {
-                    "outbound": "Customer-display"
-                  }
-                }
-              },
               "controlConfiguration": {
                 "@com.sap.vocabularies.UI.v1.LineItem": {
                   "actions": {
