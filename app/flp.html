@@ -84,7 +84,7 @@
                 }
             },
             applications: {
-                // Target Mapping 1: Order-manage -> App A
+                // Target Mapping 1: Order-manage -> App A (Sales Orders)
                 // Semantic Object: "Order", Action: "manage"
                 // Points to SAPUI5 Component crossn.orders at ./orders/webapp (List Report on Orders)
                 "Order-manage": {
@@ -95,7 +95,7 @@
                     url: "./orders/webapp"
                 },
 
-                // Target Mapping 2: Customer-display -> App B
+                // Target Mapping 2: Customer-display -> App B (Customers)
                 // Semantic Object: "Customer", Action: "display"
                 // Points to SAPUI5 Component crossn.customers at ./customers/webapp (List Report + Object Page)
                 // Target of the intent-based cross-app navigation link from App A
@@ -110,7 +110,6 @@
                 // Target Mapping 3: LegacyOrder-display -> Mock BSP Application
                 // Semantic Object: "LegacyOrder", Action: "display"
                 // Pattern 2: Cloud to On-Premise (BTP App to On-Premise ABAP BSP via SAP Cloud Connector)
-                // in a real system this URL is /sap/bc/bsp/sap/<app> on the ABAP backend, and it needs the ICF service active, a system alias and the catalog assigned to the user's role.
                 "LegacyOrder-display": {
                     title: "Legacy Orders",
                     description: "Legacy BSP Order System (Cloud to On-Prem)",
@@ -121,8 +120,6 @@
                 // Target Mapping 4: Order-displayGUI -> SAP GUI for HTML (WebGUI Transaction VA03)
                 // Semantic Object: "Order", Action: "displayGUI"
                 // Pattern 3: On-Premise to On-Premise (S/4HANA FES to SAP GUI Transaction VA03)
-                // In an on-premise system, configured in /UI2/FLPD_CUST with:
-                // Application Type: "Transaction", Transaction: "VA03", System Alias: "LOCAL"
                 "Order-displayGUI": {
                     title: "Display Sales Order (VA03)",
                     description: "SAP GUI for HTML Transaction (On-Prem to On-Prem)",
@@ -152,25 +149,15 @@
 
     <script type="text/javascript">
         sap.ui.getCore().attachInit(function () {
-            // Ensure the Demo group with the two tiles (Sales Orders, Customers) is configured
+            // Isolate our Demo group so only our 3 demo tiles appear on the Launchpad homepage
             var oLpConfig = sap.ui.require("sap/base/util/ObjectPath").get("services.LaunchPage.adapter.config", window["sap-ushell-config"]);
             if (oLpConfig && oLpConfig.groups && oLpConfig.groups.length > 0) {
-                var demoGroup = oLpConfig.groups[0];
-                demoGroup.title = "Demo";
-                demoGroup.tiles = demoGroup.tiles.filter(function (t) {
-                    return t.properties && t.properties.targetURL !== "#LegacyOrder-display";
-                });
-                oLpConfig.groups = [demoGroup];
+                oLpConfig.groups = [oLpConfig.groups[0]];
             }
 
-            var oRenderer = sap.ushell.Container.createRenderer("fiori2", true);
-            if (oRenderer && typeof oRenderer.then === "function") {
-                oRenderer.then(function (renderer) {
-                    renderer.placeAt("content");
-                });
-            } else if (oRenderer && typeof oRenderer.placeAt === "function") {
-                oRenderer.placeAt("content");
-            }
+            sap.ushell.Container.createRenderer("fiori2", true).then(function (renderer) {
+                renderer.placeAt("content");
+            });
         });
     </script>
 </head>

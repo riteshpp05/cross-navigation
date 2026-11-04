@@ -16,7 +16,6 @@
         }
       }
     },
-    "_comment_inbounds": "Target Mapping definition for intent-based navigation: Customer-display. Parameter ID receives the customer ID passed by the caller (App A) and automatically filters the List Report or displays the customer.",
     "crossNavigation": {
       "inbounds": {
         "customer-display": {

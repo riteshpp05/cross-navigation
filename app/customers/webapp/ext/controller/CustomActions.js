@@ -1,30 +1,46 @@
-sap.ui.define([], function () {
+sap.ui.define([
+    "sap/m/MessageToast"
+], function (MessageToast) {
     "use strict";
 
     return {
-        // Cross-app navigation to legacy BSP via FLP Navigation service
-        openLegacyBSP: function (oContext, aSelectedContexts) {
-            var ctx = oContext || (aSelectedContexts && aSelectedContexts[0]);
-            if (!ctx) {
-                try {
-                    var oTable = sap.ui.getCore().byId("crossn.customers::CustomersList--fe::table::Customers::LineItem-innerTable");
-                    if (oTable && oTable.getSelectedItems && oTable.getSelectedItems().length > 0) {
-                        ctx = oTable.getSelectedItems()[0].getBindingContext();
-                    }
-                } catch (e) {}
-            }
-            var sId = ctx ? ctx.getProperty("ID") : "";
-            if (!sId) {
-                var m = (window.location.hash || "").match(/[?&]ID=([^&]+)/);
-                if (m) sId = m[1];
-            }
-            if (!sId) sId = "1";
+        /**
+         * Triggered from Customers List Report or Object Page
+         * Pattern 2: Cloud-to-On-Premise cross-navigation to Legacy ABAP BSP
+         * In production: BTP Launchpad -> SAP Cloud Connector -> ABAP ICF node (/sap/bc/bsp/sap/...)
+         */
+        openLegacyBSP: function (oBindingContext, aSelectedContexts) {
+            // Support both Object Page header action (oBindingContext)
+            // and List Report table selection (aSelectedContexts)
+            const context = (aSelectedContexts && aSelectedContexts.length > 0)
+                ? aSelectedContexts[0]
+                : oBindingContext;
 
-            sap.ushell.Container.getServiceAsync("Navigation").then(function (oNav) {
-                oNav.navigate({
-                    target: { semanticObject: "LegacyOrder", action: "display" },
-                    params: { customerId: String(sId) }
+            if (!context) {
+                MessageToast.show("Please select a customer first.");
+                return;
+            }
+
+            const customerId = context.getProperty("ID");
+            if (!customerId) {
+                MessageToast.show("No customer ID available for navigation.");
+                return;
+            }
+
+            // Cross-app navigation via FLP Shell Navigation Service
+            sap.ushell.Container.getServiceAsync("Navigation").then(function (oNavService) {
+                oNavService.navigate({
+                    target: {
+                        semanticObject: "LegacyOrder",
+                        action: "display"
+                    },
+                    params: {
+                        customerId: String(customerId)
+                    }
                 });
+            }).catch(function (err) {
+                console.error("Navigation to Legacy BSP failed:", err);
+                MessageToast.show("Navigation service error.");
             });
         }
     };
