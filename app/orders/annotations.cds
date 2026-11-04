@@ -34,18 +34,9 @@ annotate service.Orders with @(
             ]
         },
         {
-            $Type : 'UI.DataFieldWithIntentBasedNavigation',
+            $Type : 'UI.DataField',
             Value : customer.name,
-            Label : 'Customer Name',
-            SemanticObject : 'Customer',
-            Action : 'display',
-            Mapping : [
-                {
-                    $Type : 'Common.SemanticObjectMappingType',
-                    LocalProperty : customer_ID,
-                    SemanticObjectProperty : 'ID'
-                }
-            ]
+            Label : 'Customer Name'
         },
         {
             $Type : 'UI.DataField',
