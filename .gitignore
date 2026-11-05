@@ -1,8 +1,12 @@
+# Node & Build artifacts
 node_modules/
 target/
 _out/
 gen/
+.gen/
+*.log
 
+# CAP runtime
 .cdsrc-private.json
 default-*.json
 *.sqlite
@@ -12,8 +16,26 @@ mta_archives/
 *_mta_build_tmp
 *.mtar
 
-# Other
+# Presentations & Media (maintained outside repo)
+*.pptx
+*.ppt
+*.pdf
+*.png
+*.jpg
+*.jpeg
+*.mp4
+screenshots/
+demo-recordings/
+
+# Test & Automation Scripts (local execution)
+*.cjs
+tests/
+
+# Other & OS artifacts
 .DS_Store
+Thumbs.db
+*.bak
+*.tmp
 
 # @cap-js/cds-typer
 @cds-models
