@@ -84,9 +84,11 @@
                 }
             },
             applications: {
-                // Target Mapping 1: Order-manage -> App A (Sales Orders)
+                // ──────────────────────────────────────────────────────────────
+                // Target Mapping 1: Order-manage → App A (Sales Orders)
                 // Semantic Object: "Order", Action: "manage"
-                // Points to SAPUI5 Component crossn.orders at ./orders/webapp (List Report on Orders)
+                // This is the entry point — the source application
+                // ──────────────────────────────────────────────────────────────
                 "Order-manage": {
                     title: "Sales Orders",
                     description: "App A (Source)",
@@ -95,10 +97,12 @@
                     url: "./orders/webapp"
                 },
 
-                // Target Mapping 2: Customer-display -> App B (Customers)
+                // ──────────────────────────────────────────────────────────────
+                // Target Mapping 2: Customer-display → App B (Customers)
                 // Semantic Object: "Customer", Action: "display"
-                // Points to SAPUI5 Component crossn.customers at ./customers/webapp (List Report + Object Page)
-                // Target of the intent-based cross-app navigation link from App A
+                // Pattern 1: Cloud-to-Cloud (✅ PRODUCTION-GRADE — same code
+                //            works in SAP Build Work Zone Standard Edition)
+                // ──────────────────────────────────────────────────────────────
                 "Customer-display": {
                     title: "Customers",
                     description: "App B (Target)",
@@ -107,24 +111,60 @@
                     url: "./customers/webapp"
                 },
 
-                // Target Mapping 3: LegacyOrder-display -> Mock BSP Application
-                // Semantic Object: "LegacyOrder", Action: "display"
-                // Pattern 2: Cloud to On-Premise (BTP App to On-Premise ABAP BSP via SAP Cloud Connector)
+                // ──────────────────────────────────────────────────────────────
+                // Target Mapping 3: LegacyOrder-display
+                // Pattern 2: Cloud to On-Premise (BTP App → ABAP BSP via Cloud Connector)
+                //
+                // ┌─── PRODUCTION EQUIVALENT ────────────────────────────────────┐
+                // │ In SAP Build Work Zone / BTP Launchpad:                      │
+                // │   applicationType : "URL"                                    │
+                // │   url             : "<BTP_Destination>/sap/bc/bsp/sap/<app>" │
+                // │   systemAlias     : "BACKEND_S4"                             │
+                // │                                                              │
+                // │ Prerequisites:                                               │
+                // │   1. SAP Cloud Connector installed & connected to subaccount │
+                // │   2. Virtual host mapped in SCC (e.g. s4backend:443)         │
+                // │   3. BTP Destination created pointing to virtual host        │
+                // │   4. SICF service activated for /sap/bc/bsp/sap/<app>        │
+                // │   5. Principal Propagation configured for SSO                │
+                // └──────────────────────────────────────────────────────────────┘
+                //
+                // LOCAL SANDBOX SIMULATION (mock HTML page):
                 "LegacyOrder-display": {
                     title: "Legacy Orders",
                     description: "Legacy BSP Order System (Cloud to On-Prem)",
                     applicationType: "URL",
-                    url: "legacy-bsp/index.html"
+                    url: "legacy-bsp/index.html"    // ← Mock: in production, this is a BTP Destination URL
                 },
 
-                // Target Mapping 4: Order-displayGUI -> SAP GUI for HTML (WebGUI Transaction VA03)
-                // Semantic Object: "Order", Action: "displayGUI"
-                // Pattern 3: On-Premise to On-Premise (S/4HANA FES to SAP GUI Transaction VA03)
+                // ──────────────────────────────────────────────────────────────
+                // Target Mapping 4: Order-displayGUI
+                // Pattern 3: On-Premise to On-Premise (S/4HANA FLP → WebGUI VA03)
+                //
+                // ┌─── PRODUCTION EQUIVALENT (configured in /UI2/FLPD_CUST) ────┐
+                // │   applicationType : "Transaction"   ← NOT "URL"             │
+                // │   transaction     : "VA03"                                   │
+                // │   systemAlias     : "LOCAL"          ← same system, no tunnel│
+                // │                                                              │
+                // │ Parameter Mapping (in Target Mapping config):                │
+                // │   Intent param  : orderId                                    │
+                // │   Dynpro field  : VBAK-VBELN                                 │
+                // │                                                              │
+                // │ The Launchpad constructs the skip-screen URL automatically:  │
+                // │   /sap/bc/gui/sap/its/webgui                                │
+                // │     ?~transaction=*VA03 VBAK-VBELN=4500001;DYNP_OKCODE=SHOW │
+                // │                                                              │
+                // │   *     = skip the initial selection screen                  │
+                // │   VBAK-VBELN = fill order number into the Dynpro field       │
+                // │   DYNP_OKCODE=SHOW = press the Display button               │
+                // └──────────────────────────────────────────────────────────────┘
+                //
+                // LOCAL SANDBOX SIMULATION (mock HTML page styled like SAP GUI):
                 "Order-displayGUI": {
                     title: "Display Sales Order (VA03)",
                     description: "SAP GUI for HTML Transaction (On-Prem to On-Prem)",
                     applicationType: "URL",
-                    url: "legacy-webgui/index.html",
+                    url: "legacy-webgui/index.html",    // ← Mock: in production, applicationType is "Transaction"
                     navigationMode: "newWindow"
                 }
             }
