@@ -40,11 +40,6 @@ When presenting code architecture to senior stakeholders, focus on these files:
    * **Exact FLP URL**: [http://localhost:4004/flp.html](http://localhost:4004/flp.html)
    * **CAP Welcome Page**: [http://localhost:4004/](http://localhost:4004/) (links to `flp.html` under *Web Applications*)
 
-3. Run automated end-to-end verification (headless browser test covering all 3 topologies):
-   ```bash
-   node test-e2e.cjs
-   ```
-
 ---
 
 ## 5-Step Presentation Demo Script
@@ -129,7 +124,5 @@ cross-navigation/
 │       └── index.html               # Simulation of classic SAP GUI for HTML (VA03)
 ├── db/                              # schema.cds & initial CSV test data
 ├── srv/                             # service.cds (CrossService OData V4)
-├── test-e2e.cjs                     # Headless Chrome 5-step automated verification suite
-├── SAP_Cross_Navigation.pptx        # Executive 16:9 presentation deck (11 slides)
 └── README.md                        # Architectural guide & demo walkthrough
 ```
